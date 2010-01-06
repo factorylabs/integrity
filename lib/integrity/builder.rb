@@ -46,9 +46,30 @@ module Integrity
     end
 
     def run
-      cmd = "(cd #{repo.directory} && #{@build.project.command} 2>&1)"
-      IO.popen(cmd, "r") { |io| @output = io.read }
+      # HACK: gem bundler sets the RUBYOPT env variable which jacks with projects own gem management so unset in command
+      cmd = "(#{bundler_env_fix} && cd #{repo.directory} && #{@build.project.command} 2>&1)"
+      @output = ''
+      IO.popen(cmd, "r") do |io|
+        # incremental update of status
+        io.each do |line|
+          @output += line
+          @build.update!(
+            :output       => @output
+          )
+        end
+      end
       @status = $?.success?
+    end
+
+    def bundler_env_fix
+      # HACK: gem bundler sets the RUBYOPT env variable which jacks with projects own gem management so unset in command
+      file = File.expand_path('vendor/gems/environment.rb')
+      dir = File.dirname(file)
+
+      path = ENV['PATH'].gsub("#{dir}/../../bin:", '')
+      rubyopt = ENV['RUBYOPT'].gsub("-r#{file}", '')
+
+      "RUBYOPT=#{rubyopt} && PATH=#{path}"
     end
 
     def repo
@@ -58,5 +79,6 @@ module Integrity
     def commit
       @build.commit.identifier
     end
+
   end
 end
