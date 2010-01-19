@@ -19,4 +19,5 @@ Integrity.configure do |c|
   c.github       "SECRET"
   c.build_all!
   c.builder      :threaded, 5
+  c.keep_build_days 14
 end

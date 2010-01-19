@@ -6,6 +6,12 @@
       %button{ :type => :submit, :title => "Rebuild this commit" }<
         Rebuild
 
+- if build.pending? || build.building?
+  %form{ :action => fail_build_path(build), :method => :post }
+    %p.submit
+      %button{ :type => :submit, :title => "Fail this build" }<
+        Fail
+
 %blockquote
   %p&= build.commit.message
   %p.meta<

@@ -16,6 +16,7 @@ module Integrity
     has 1,     :commit
 
     before :destroy do commit.destroy! end
+    before :create do cleanup_builds end
 
     def self.pending
       all(:started_at => nil)
@@ -49,6 +50,20 @@ module Integrity
       when :pending  then "This commit hasn't been built yet"
       when :building then "#{commit.short_identifier} is building"
       end
+    end
+
+    def cleanup_builds
+      `find #{Integrity.directory.join('builds', repository_path)} -maxdepth 1 -type d -mtime +#{Integrity.keep_build_days} | xargs rm -rf`
+      project.builds.all(:created_at.lte => (Time.now - 60 * 60 * 24 * Integrity.keep_build_days)).each do |build|
+        build.destroy
+      end
+    end
+
+    def repository_path
+     "#{project.uri}-#{project.branch}".
+      gsub(/[^\w_ \-]+/i, "-").
+      gsub(/[ \-]+/i, "-").
+      gsub(/^\-|\-$/i, "")
     end
   end
 end

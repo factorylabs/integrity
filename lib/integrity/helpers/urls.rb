@@ -32,6 +32,10 @@ module Integrity
       def build_path(build, *path)
         project_path(build.project, "builds", build.id, *path)
       end
+      
+      def fail_build_path(build, *path)
+        project_path(build.project, "builds", build.id, 'fail', *path)
+      end
     end
   end
 end

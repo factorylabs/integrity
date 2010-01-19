@@ -15,7 +15,7 @@ module Integrity
 
       def deliver!
         Broach.settings = config
-        Broach.speak(config["room"], "#{short_message}. #{build_url}") if announce_build?
+        Broach.speak(config["room"], "#{medium_message}. #{build_url}") if announce_build?
         Broach.speak(config["room"], full_message, :type => :paste) if build.failed?
       end
 
@@ -28,6 +28,10 @@ Commit Author: #{build.commit.author.name}
 
 #{escape(build.output)}
 EOM
+      end
+
+      def medium_message
+        "Build #{build.commit.short_identifier} of #{build.project.name} by #{build.commit.author.name}: #{build.commit.message} #{build.successful ? 'was successful' : 'failed'}"
       end
 
       def announce_build?

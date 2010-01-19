@@ -38,7 +38,7 @@ require "integrity/builder/threaded"
 
 module Integrity
   class << self
-    attr_accessor :builder, :directory, :base_url, :logger
+    attr_accessor :builder, :directory, :base_url, :logger, :keep_build_days
   end
 
   def self.configure(&block)

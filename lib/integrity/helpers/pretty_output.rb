@@ -30,6 +30,19 @@ module Integrity
         end
       end
 
+      def pretty_date_and_time(date_time)
+        "#{pretty_date(date_time)} at #{date_time.strftime("%I:%M%P")}"
+      end
+
+      def pretty_build_output(build_status, human_status, started_at, completed_at)
+        case build_status
+        when :success then "#{human_status} #{pretty_date_and_time(completed_at)}"
+        when :failed then "#{human_status} #{pretty_date_and_time(completed_at)}"
+        when :pending then human_status
+        when :building then "#{human_status} #{pretty_date_and_time(started_at)}"
+        end
+      end
+
       def strftime_with_ordinal(date_time, format_string)
         ordinal = case date_time.day
           when 1, 21, 31 then "st"

@@ -47,6 +47,10 @@ module Integrity
     def build_all!
       Integrity.app.enable(:build_all)
     end
+    
+    def keep_build_days(days)
+      Integrity.keep_build_days = days
+    end    
 
     def user(v)
       Integrity.app.set(:user, v)

@@ -123,5 +123,14 @@ module Integrity
       @build = current_project.build(current_build.commit.identifier)
       redirect build_url(@build).to_s
     end
+
+    post "/:project/builds/:build/fail" do
+      login_required
+
+      @build = current_project.builds.first(:id => params[:build])
+      @build.update(:successful => false, :started_at => Time.now, :completed_at => Time.now)
+      redirect build_url(@build).to_s
+    end
+
   end
 end

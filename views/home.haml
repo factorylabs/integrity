@@ -17,6 +17,6 @@
           - when :blank
             Never built yet
           - else
-            = project.human_status
+            = pretty_build_output(project.last_build.status, project.human_status, project.last_build.started_at, project.last_build.completed_at)
   %p#new
     %a{ :href => path("/new") } Add a new project
