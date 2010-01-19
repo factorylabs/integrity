@@ -18,6 +18,6 @@ Integrity.configure do |c|
   c.log          "integrity.log"
   c.github       "SECRET"
   c.build_all!
-  c.builder      :threaded, 5
+  c.builder      :resque
   c.keep_build_days 14
 end

@@ -1,5 +1,7 @@
+require 'init'
 require "rake/testtask"
 require "rake/clean"
+require 'resque/tasks'
 
 desc "Default: run all tests"
 task :default => :test
