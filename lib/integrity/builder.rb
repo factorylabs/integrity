@@ -5,7 +5,7 @@ module Integrity
     end
 
     def initialize(build)
-      @build  = build
+      @build = build
       @status = false
       @output = ""
     end
@@ -24,13 +24,13 @@ module Integrity
       metadata = repo.metadata
 
       @build.update(
-        :started_at => Time.now,
-        :commit     => {
-          :identifier   => metadata["id"],
-          :message      => metadata["message"],
-          :author       => metadata["author"],
-          :committed_at => metadata["timestamp"]
-        }
+          :started_at => Time.now,
+          :commit => {
+              :identifier => metadata["id"],
+              :message => metadata["message"],
+              :author => metadata["author"],
+              :committed_at => metadata["timestamp"]
+          }
       )
     end
 
@@ -38,9 +38,9 @@ module Integrity
       Integrity.log "Build #{commit} exited with #{@status} got:\n #{@output}"
 
       @build.update!(
-        :completed_at => Time.now,
-        :successful   => @status,
-        :output       => @output
+          :completed_at => Time.now,
+          :successful => @status,
+          :output => @output
       )
 
       @build.project.enabled_notifiers.each { |n| n.notify_of_build(@build) }
@@ -55,32 +55,35 @@ module Integrity
         io.each do |line|
           @output += line
           @build.update!(
-            :output       => @output
+              :output => @output
           )
         end
       end
       @status = $?.success?
     end
 
-    def bundler_env_fix
-      # HACK: gem bundler sets the RUBYOPT env variable which jacks with projects own gem management so unset in command
-      file = File.expand_path('vendor/gems/environment.rb')
-      dir = File.dirname(file)
-
-      path = ENV['PATH'].gsub("#{dir}/../../bin:", '')
-      rubyopt = ENV['RUBYOPT'].gsub("-r#{file}", '')
-
-      "RUBYOPT=#{rubyopt} && PATH=#{path}"
-    end
-
     def repo
       @repo ||= Repository.new(
-        @build.id, @build.project.uri, @build.project.branch, commit
+          @build.id, @build.project.uri, @build.project.branch, commit
       )
     end
 
     def commit
       @build.commit.identifier
+    end
+
+    private
+     def bundler_env_fix
+      # HACK: gem bundler sets the RUBYOPT env variable which jacks with projects own gem management so unset in command
+      "RUBYOPT=#{pre_bundler_rubyopt} && PATH=#{pre_bundler_path}"
+    end
+
+    def pre_bundler_path
+      ENV['PATH'] && ENV["PATH"].split(":").reject { |path| path.include?("vendor") }.join(":")
+    end
+
+    def pre_bundler_rubyopt
+      ENV['RUBYOPT'] && ENV["RUBYOPT"].split.reject { |opt| opt.include?("vendor") }.join(" ")
     end
 
   end
