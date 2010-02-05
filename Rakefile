@@ -2,6 +2,7 @@ require 'init'
 require "rake/testtask"
 require "rake/clean"
 require 'resque/tasks'
+require 'redis/raketasks'
 
 desc "Default: run all tests"
 task :default => :test

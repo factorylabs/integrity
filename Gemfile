@@ -1,16 +1,16 @@
 source "http://gems.github.com"
 source "http://gemcutter.org"
-gem "dm-core", "0.10.1"
-gem "dm-timestamps", "0.10.1"
-gem "dm-types", "0.10.1"
-gem "dm-migrations", "0.10.1"
-gem "dm-aggregates", "0.10.1"
-gem "dm-validations", "0.10.1"
-gem "bcrypt-ruby", "2.0.5"
-gem "uuidtools", "2.0.0"
-gem "extlib", "0.9.13"
-gem "data_objects", "0.10.0"
-gem "do_mysql", "0.10.0"
+gem "dm-core", "0.10.2"
+gem "dm-timestamps", "0.10.2"
+gem "dm-types", "0.10.2"
+gem "dm-migrations", "0.10.2"
+gem "dm-aggregates", "0.10.2"
+gem "dm-validations", "0.10.2"
+gem "bcrypt-ruby", "2.1.2"
+#gem "uuidtools", "2.0.0"
+gem "extlib", "0.9.14"
+gem "data_objects", "0.10.1"
+gem "do_mysql", "0.10.1"
 gem "rake"
 gem "haml", "2.2.2"
 gem "thor", "0.9.9"
@@ -36,6 +36,8 @@ gem "mysql"
 # gem "delayed_job", :git => "git://github.com/tobi/delayed_job.git"
 # = Dependency for the :resque builder
 gem "resque"
+
+gem 'rake'
 
 # = Development dependencies.
 group :test do

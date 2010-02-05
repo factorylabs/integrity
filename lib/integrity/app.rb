@@ -1,6 +1,7 @@
 module Integrity
   class App < Sinatra::Base
     set     :root, File.expand_path("../../..", __FILE__)
+    set     :raise_errors, true 
     enable  :methodoverride, :static, :sessions
     disable :build_all
 
@@ -13,6 +14,7 @@ module Integrity
 
     error do
       @error = request.env["sinatra.error"]
+#      logger.error @error
       status 500
       show :error, :title => "something has gone terribly wrong"
     end

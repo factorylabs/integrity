@@ -7,7 +7,8 @@ rescue LoadError
   # Fallback on doing the resolve at runtime.
   require "rubygems"
   require "bundler"
-  Bundler.setup
+  Bundler.setup(:group, :names)
+  Bundler.require(:default)
 end
 
 
@@ -22,7 +23,7 @@ require "integrity"
 # require "integrity/notifier/campfire"
 
 Integrity.configure do |c|
-  c.database     "sqlite3:integrity.db"
+  c.database     "mysql://root:@localhost/integrity"
   c.directory    "builds"
   c.base_url     "http://ci.example.org"
   c.log          "integrity.log"
