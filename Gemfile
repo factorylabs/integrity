@@ -1,3 +1,5 @@
+source "http://gems.github.com"
+source "http://gemcutter.org"
 gem "dm-core", "0.10.1"
 gem "dm-timestamps", "0.10.1"
 gem "dm-types", "0.10.1"
@@ -8,7 +10,7 @@ gem "bcrypt-ruby", "2.0.5"
 gem "uuidtools", "2.0.0"
 gem "extlib", "0.9.13"
 gem "data_objects", "0.10.0"
-gem "do_sqlite3", "0.10.0"
+gem "do_mysql", "0.10.0"
 gem "rake"
 gem "haml", "2.2.2"
 gem "thor", "0.9.9"
@@ -18,9 +20,10 @@ gem "sinatra", "0.9.4"
 gem "sinatra-authorization", "1.0.0"
 gem "sinatra-url-for", :git => "git://github.com/emk/sinatra-url-for.git"
 
+gem "mysql"
 # These are dependencies for the various notifiers. Uncomment as appropriate.
 # = Email
-# gem "sinatra-ditties"
+ gem "sinatra-ditties"
 # = IRC
 # gem "shout-bot"
 # = Campfire
@@ -35,8 +38,7 @@ gem "sinatra-url-for", :git => "git://github.com/emk/sinatra-url-for.git"
 gem "resque"
 
 # = Development dependencies.
-only :test do
-  source "http://gems.github.com"
+group :test do
   gem "ruby-debug"
   gem "sqlite3-ruby"
   gem "activerecord"

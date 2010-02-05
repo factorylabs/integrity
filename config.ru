@@ -1,2 +1,10 @@
 require "init"
-run Integrity.app
+require "resque/server"
+
+map "/resque" do
+  run Resque::Server
+end
+
+map "/" do
+  run Integrity.app
+end

@@ -16,3 +16,5 @@ vendor
 doc/integrity.html
 builds
 .idea
+.bundle
+Gemfile.lock
