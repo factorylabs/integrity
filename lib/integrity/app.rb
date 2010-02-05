@@ -134,5 +134,12 @@ module Integrity
       redirect build_url(@build).to_s
     end
 
+    post "/:project/builds/:build/poll" do
+      login_required
+
+      @build = current_project.builds.first(:id => params[:build])
+      @build.to_json
+    end
+
   end
 end
