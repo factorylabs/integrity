@@ -138,7 +138,7 @@ module Integrity
       login_required
 
       @build = current_project.builds.first(:id => params[:build])
-      @build.to_json
+      @build.output
     end
 
   end

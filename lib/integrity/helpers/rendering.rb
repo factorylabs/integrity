@@ -8,6 +8,13 @@ module Integrity
         }
       end
 
+      def javascripts(*scripts)
+        scripts.each { |script|
+          haml_tag(:script, '', :src => path("/#{script}.js"),
+            :type => "text/javascript")
+        }
+      end
+
       def stylesheet_hash
         @_hash ||= Digest::MD5.file(options.views + "/integrity.sass").hexdigest
       end

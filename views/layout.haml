@@ -5,6 +5,7 @@
     %meta{ :content => "en", :"http-equiv" => "Content-Language" }
     %title= "#{@title.last} | integrity"
     - stylesheets(:reset, :buttons, :integrity)
+    - javascripts(:prototype, :application)
   %body
     #header
       %h1= @title.join(" / ")

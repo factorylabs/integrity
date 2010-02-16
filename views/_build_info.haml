@@ -1,5 +1,4 @@
 %h1&= build.human_status
-
 - if !build.pending? && !build.building? && build.failed?
   %form{ :action => build_path(build), :method => :post }
     %p.submit
@@ -25,6 +24,5 @@
       &== commit: #{build.commit.identifier}
 
 %h2 Build Output:
-%pre.output
-  :preserve
-    #{bash_color_codes h(build.output)}
+%pre.output{ :id => build.pending? || build.building? ? 'output_window' : '' }
+  = partial(:build_output, :build => build)
