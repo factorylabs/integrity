@@ -1,7 +1,7 @@
 module Integrity
   class App < Sinatra::Base
     set     :root, File.expand_path("../../..", __FILE__)
-    set     :raise_errors, true 
+    set     :raise_errors, true
     enable  :methodoverride, :static, :sessions
     disable :build_all
 
@@ -116,7 +116,7 @@ module Integrity
       login_required unless current_project.public?
 
       show :build, :title => ["projects", current_project.permalink,
-        current_build.commit.identifier]
+                              current_build.commit.identifier]
     end
 
     post "/:project/builds/:build" do
@@ -138,6 +138,13 @@ module Integrity
       login_required
 
       @build = current_project.builds.first(:id => params[:build])
+      @build.output
+    end
+
+    post "/:project/poll" do
+      login_required
+
+      @build = current_project.builds.last
       @build.output
     end
 
