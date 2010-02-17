@@ -141,6 +141,7 @@ module Integrity
       @build.output
     end
 
+    #
     post "/:project/poll" do
       login_required
 
