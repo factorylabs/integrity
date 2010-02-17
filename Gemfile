@@ -25,6 +25,7 @@ gem "mysql"
 # = Email
  gem "sinatra-ditties"
  gem "integritray"
+ gem "builder"
 # = IRC
 # gem "shout-bot"
 # = Campfire
