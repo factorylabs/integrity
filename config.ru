@@ -8,3 +8,7 @@ end
 map "/" do
   run Integrity.app
 end
+
+map "/" do
+  run Integrity::Integritray::App
+end
