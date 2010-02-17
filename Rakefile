@@ -28,6 +28,14 @@ task :db do
   DataMapper.auto_migrate!
 end
 
+namespace :integrity do
+  desc "Check for new commits"
+  task :check_for_commits do
+    require "init"
+    Integrity::Project.check_for_commits
+  end
+end
+
 namespace :jobs do
   desc "Clear the delayed_job queue."
   task :clear do
@@ -60,8 +68,8 @@ end
 
 desc "Generate HTML documentation."
 file "doc/integrity.html" => ["doc/htmlize",
-  "doc/integrity.txt",
-  "doc/integrity.css"] do |f|
+                              "doc/integrity.txt",
+                              "doc/integrity.css"] do |f|
   sh "cat doc/integrity.txt | doc/htmlize > #{f.name}"
 end
 
