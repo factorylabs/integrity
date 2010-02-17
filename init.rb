@@ -23,11 +23,13 @@ require "integrity"
 # require "integrity/notifier/campfire"
 
 Integrity.configure do |c|
-  c.database     "mysql://root:@localhost/integrity"
+  c.database     "mysql://root:fbisadc@localhost/integrity"
   c.directory    "builds"
   c.base_url     "http://ci.example.org"
   c.log          "integrity.log"
   c.github       "SECRET"
+  c.user       "admin"
+  c.pass       "admin"
   c.build_all!
   c.builder      :resque
   c.keep_build_days 14
