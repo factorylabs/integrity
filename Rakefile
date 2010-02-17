@@ -34,6 +34,22 @@ namespace :integrity do
     require "init"
     Integrity::Project.check_for_commits
   end
+
+  task :watch_for_commits do
+    require 'init'
+    @shutdown = false
+    trap('TERM') { @shutdown = true  }
+    trap('INT')  { @shutdown = true  }
+    trap('QUIT') { @shutdown = true  }
+
+    puts 'Watching for commits...'
+    loop do
+      break if @shutdown
+      puts Time.now
+      Integrity::Project.check_for_commits
+      sleep ENV['INTERVAL'] || 15
+    end
+  end
 end
 
 namespace :jobs do
