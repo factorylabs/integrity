@@ -7,10 +7,10 @@ rescue LoadError
   # Fallback on doing the resolve at runtime.
   require "rubygems"
   require "bundler"
-  Bundler.setup(:group, :names)
-  Bundler.require(:default)
+  Bundler.setup
 end
 
+#Bundler.require(:default)
 
 require "integrity"
 

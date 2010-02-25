@@ -45,6 +45,7 @@ gem 'rake'
 group :test do
   gem "ruby-debug"
   gem "sqlite3-ruby"
+  gem "do_sqlite3"
   gem "activerecord"
   gem "delayed_job", :git => "git://github.com/tobi/delayed_job.git"
   gem "rr"
@@ -57,8 +58,8 @@ group :test do
   gem "rumbster"
   gem "nokogiri"
   gem "hpricot"
-  gem "jeremymcanally-pending"
-  gem "jeremymcanally-context"
+  gem "jeremymcanally-pending", :require => 'pending'
+  gem "jeremymcanally-context", :require => 'context'
   gem "foca-storyteller"
   gem "webrat"
   gem "shout-bot"

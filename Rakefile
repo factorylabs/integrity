@@ -1,4 +1,4 @@
-require 'init'
+#require 'init'
 require "rake/testtask"
 require "rake/clean"
 require 'resque/tasks'
