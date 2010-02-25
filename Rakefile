@@ -47,7 +47,7 @@ namespace :integrity do
       break if @shutdown
       puts Time.now
       Integrity::Project.check_for_commits
-      sleep ENV['INTERVAL'] || 15
+      sleep ENV['INTERVAL'].to_i || 15
     end
   end
 end
