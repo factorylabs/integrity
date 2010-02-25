@@ -33,4 +33,5 @@ Integrity.configure do |c|
   c.build_all!
   c.builder      :resque
   c.keep_build_days 14
+  c.build_queues [ 'integrity:long_builds', 'integrity:short_builds', 'integrity' ]
 end

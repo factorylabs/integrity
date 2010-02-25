@@ -23,9 +23,16 @@ namespace :test do
   end
 end
 
-task :db do
-  require "init"
-  DataMapper.auto_migrate!
+namespace :db do
+  task :create_schema do
+    require "init"
+    DataMapper.auto_migrate!
+  end
+
+  task :update_schema do
+    require "init"
+    DataMapper.auto_upgrade!
+  end
 end
 
 namespace :integrity do
@@ -75,7 +82,7 @@ begin
     desc "Start a Resque worker for Integrity"
     task :work do
       require "init"
-      ENV["QUEUE"] = "integrity"
+      ENV["QUEUE"] ||= "integrity"
       Rake::Task["resque:resque:work"].invoke
     end
   end

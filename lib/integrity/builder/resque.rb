@@ -3,7 +3,8 @@ require "resque"
 module Integrity
   module ResqueBuilder
     def self.call(build)
-      Resque.enqueue BuildJob, build.id
+      Resque::Job.create(build.project.queue, BuildJob, build.id)
+#      Resque.enqueue BuildJob, build.id
     end
 
     module BuildJob

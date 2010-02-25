@@ -24,6 +24,14 @@
     %textarea#project_build_script{ :name => "project_data[command]", :cols => 40, :rows => 2 }
       &== #{@project.command.to_s}
 
+  - if Integrity.build_queues
+    %p.normal{ :class => error_class(@project, :queue) }
+      %label{ :for => "project_queue" }
+        &== Build queue #{errors_on @project, :queue}
+      %select{:name=>"project_data[queue]"}
+        - for option in Integrity.build_queues
+          %option{:selected=>(option == @project.queue)}= option
+
   %p.normal.checkbox
     %label{ :for => "project_public" } Public project
     %input.hidden{ :name => "project_data[public]", :value => "0", :type => "hidden" }

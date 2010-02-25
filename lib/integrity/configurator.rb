@@ -50,7 +50,11 @@ module Integrity
     
     def keep_build_days(days)
       Integrity.keep_build_days = days
-    end    
+    end
+
+    def build_queues(queues)
+      Integrity.build_queues = queues
+    end  
 
     def user(v)
       Integrity.app.set(:user, v)
