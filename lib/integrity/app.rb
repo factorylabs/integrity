@@ -14,7 +14,7 @@ module Integrity
 
     error do
       @error = request.env["sinatra.error"]
-      logger.error @error
+#      logger.error @error
       status 500
       show :error, :title => "something has gone terribly wrong"
     end
