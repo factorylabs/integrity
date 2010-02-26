@@ -1,9 +1,10 @@
+require "helper"
+
 require "storyteller"
 require "webrat"
 require "rack/test"
 require "webmock"
 
-require "helper"
 require "helper/acceptance/repo"
 
 Rack::Test::DEFAULT_HOST.replace("www.example.com")

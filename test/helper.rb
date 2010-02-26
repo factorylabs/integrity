@@ -36,6 +36,7 @@ class Test::Unit::TestCase
       c.log  "/dev/null"
       c.user "admin"
       c.pass "test"
+      c.keep_build_days 1
     }
   end
 

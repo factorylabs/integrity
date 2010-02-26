@@ -60,7 +60,7 @@ group :test do
   gem "hpricot"
   gem "jeremymcanally-pending", :require => 'pending'
   gem "jeremymcanally-context", :require => 'context'
-  gem "foca-storyteller"
+  gem "foca-storyteller",       :require => 'storyteller'
   gem "webrat"
   gem "shout-bot"
   gem "sinatra-ditties"
