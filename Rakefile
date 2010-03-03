@@ -1,8 +1,13 @@
 #require 'init'
 require "rake/testtask"
 require "rake/clean"
+
+begin
 require 'resque/tasks'
-#require 'redis/raketasks'
+require 'redis/raketasks'
+rescue LoadError
+  "Unable to load redis tasks..."
+end
 
 desc "Default: run all tests"
 task :default => :test
