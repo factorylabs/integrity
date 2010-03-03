@@ -2,7 +2,7 @@
 require "rake/testtask"
 require "rake/clean"
 require 'resque/tasks'
-require 'redis/raketasks'
+#require 'redis/raketasks'
 
 desc "Default: run all tests"
 task :default => :test
@@ -15,7 +15,7 @@ namespace :test do
     t.libs << "test"
     t.test_files = FileList["test/unit/*_test.rb"]
   end
-
+``
   desc "Run acceptance tests"
   Rake::TestTask.new(:acceptance) do |t|
     t.libs << "test"
