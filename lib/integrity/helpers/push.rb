@@ -25,7 +25,7 @@ module Integrity
     end
 
     def github_payload
-      payload = JSON.parse(params[:payload])
+       payload = JSON.parse(params[:payload])
 
       repository = payload.delete("repository")
       branch     = payload.delete("ref").split("/").last

@@ -3,10 +3,10 @@ require "rake/testtask"
 require "rake/clean"
 
 begin
-require 'resque/tasks'
-require 'redis/raketasks'
+  require 'resque/tasks'
+  require 'redis/raketasks'
 rescue LoadError
-  "Unable to load redis tasks..."
+  "Unable to load redis / resque tasks..."
 end
 
 desc "Default: run all tests"
@@ -20,7 +20,7 @@ namespace :test do
     t.libs << "test"
     t.test_files = FileList["test/unit/*_test.rb"]
   end
-``
+
   desc "Run acceptance tests"
   Rake::TestTask.new(:acceptance) do |t|
     t.libs << "test"
@@ -80,19 +80,29 @@ namespace :jobs do
   end
 end
 
-begin
-  namespace :resque do
-    require "resque/tasks"
 
-    desc "Start a Resque worker for Integrity"
-    task :work do
-      require "init"
-      ENV["QUEUE"] ||= "integrity"
-      Rake::Task["resque:resque:work"].invoke
-    end
+namespace :resque do
+
+  task :setup do
+    require "init"
   end
-rescue LoadError
+
+  desc "Start a Resque worker per queue Integrity"
+  task :worker_per_queue => :setup do
+    threads = []
+
+    Integrity.build_queues.each do |queue|
+      ENV["QUEUE"] = queue
+      threads << Thread.new do
+        system "rake resque:work"
+      end
+    end
+
+    threads.each { |thread| thread.join }
+  end
+  
 end
+
 
 desc "Generate HTML documentation."
 file "doc/integrity.html" => ["doc/htmlize",
