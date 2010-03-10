@@ -83,6 +83,10 @@ end
 
 namespace :resque do
 
+  def kill_threads(threads)
+    threads.each { | thread | Thread.kill(thread) }
+  end
+
   task :setup do
     require "init"
   end
@@ -99,8 +103,20 @@ namespace :resque do
     end
 
     threads.each { |thread| thread.join }
+
   end
-  
+
+  task  :kill_all_workers => :setup do
+    rake_info = `ps -e | grep [r]esque:worker_per_queue`.split()
+    unless rake_info.empty?
+      parent_pid = rake_info[0]
+      children = `ps -ef| awk '$3 == '#{parent_pid}' { print $2 }'`.split
+      children.each do |pid|
+        `kill #{pid}`
+      end
+    end
+  end
+
 end
 
 
