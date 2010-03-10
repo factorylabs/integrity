@@ -79,11 +79,11 @@ module Integrity
     end
 
     def pre_bundler_path
-      ENV['PATH'] && ENV["PATH"].split(":").reject { |path| path.include?("vendor") }.join(":")
+      ENV['PATH'] && ENV["PATH"].split(":").reject { |path| path.include?(".bundle") }.join(":")
     end
 
     def pre_bundler_rubyopt
-      ENV['RUBYOPT'] && ENV["RUBYOPT"].split.reject { |opt| opt.include?("vendor") }.join(" ")
+      ENV['RUBYOPT'] && ENV["RUBYOPT"].split.reject { |opt| opt.include?(".bundle") }.join(" ")
     end
 
   end
