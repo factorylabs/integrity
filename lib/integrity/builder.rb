@@ -75,7 +75,7 @@ module Integrity
     private
      def bundler_env_fix
       # HACK: gem bundler sets the RUBYOPT env variable which jacks with projects own gem management so unset in command
-      "RUBYOPT=#{pre_bundler_rubyopt} && PATH=#{pre_bundler_path}"
+      "BUNDLE_GEMFILE= && RUBYOPT=#{pre_bundler_rubyopt} && PATH=#{pre_bundler_path}"
     end
 
     def pre_bundler_path
