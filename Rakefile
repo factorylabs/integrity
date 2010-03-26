@@ -96,7 +96,7 @@ namespace :resque do
     threads = []
 
     Integrity.build_queues.each do |queue|
-      ENV["QUEUE"] = queue
+      ENV["QUEUE"] = "'#{queue}'"
       threads << Thread.new do
         system "rake resque:work"
       end
@@ -106,6 +106,7 @@ namespace :resque do
 
   end
 
+  desc "Kill all the workers"
   task  :kill_all_workers => :setup do
     rake_info = `ps -e | grep [r]esque:worker_per_queue`.split()
     unless rake_info.empty?
