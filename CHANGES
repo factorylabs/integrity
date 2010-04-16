@@ -1,3 +1,56 @@
+<<<<<<< HEAD
+=======
+= 0.4.1 / 2010-04-02
+
+ * The caching stuff introduced 0.3.0 have been reverted
+
+ * The "Delete this build" is now always available, even for in-progress builds
+
+= 0.4.0 / 2010-03-27
+
+ * Add a rake task to clean-up old build checkouts
+
+ * Add a TCP notifier. Works great with http://github.com/atmos/ircat.js
+
+ * Fix URLs, allowing to mount Integrity to a sub direcory [Iain Hecker]
+
+ * Fix the delete/rebuild buttons
+
+ * The last build is now displayed both at the top and in the builds list.
+   It simplifies things and fixes some ordering issues.
+
+ * Upgrade to Sinatra 1.0
+
+= 0.3.1 / 2010-02-27
+
+ * Add button to delete builds that are not in progress [Joe Chippindale]
+
+ * Only show build output when available [Joe Chippindale]
+
+= 0.3.0 / 2010-02-21
+
+ * Introduce the bootstrapper. Useful to automate creation of projects. Example:
+
+      Integrity.bootstrap do |b|
+        b.project "Integrity" do |p|
+          p.uri     = "git://github.com/integrity/integrity"
+          p.command = "gem bundle && ./bin/rake"
+          p.public
+        end
+      end
+
+ * Miscelleanous SQL performance improvements and fixes. Thanks to
+   Nick Quaranto for his help debugging these problems
+
+ * Set proper HTTP cache headers
+
+ * Allow projects to have the same URI and branch
+
+ * Upgrade to Bundler 0.9 [Nick Quaranto]
+
+ * Upgrade to DataMapper 0.10.2
+
+>>>>>>> upstream/master
 = 0.2.3 / 2010-01-11
 
  * Solidify and document the API to trigger builds

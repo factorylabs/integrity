@@ -16,6 +16,13 @@ bin
 vendor
 doc/integrity.html
 builds
+<<<<<<< HEAD
 .idea
 .bundle
 Gemfile.lock
+=======
+.sass-cache
+public/integrity.css
+Gemfile.lock
+.bundle/
+>>>>>>> upstream/master

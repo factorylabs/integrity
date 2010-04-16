@@ -7,12 +7,12 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
     So that I know if it builds properly
   EOS
 
-  before(:all) do
+  setup do
     @builder = Integrity.builder
     Integrity.configure { |c| c.builder :threaded }
   end
 
-  after(:all) do
+  teardown do
     Integrity.builder = @builder
   end
 
@@ -30,12 +30,10 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
     click_button "manual build"
 
     assert_have_tag("#build h1", :content => "hasn't been built yet")
-    assert_have_no_tag("button", :content => "Rebuild")
 
     build
     reload
 
-    assert_have_no_tag("button", :content => "Rebuild")
     assert_have_tag("h1", :content => "Built #{repo.short_head} successfully")
     assert_have_tag("blockquote p", :content => "This commit will work")
     assert_have_tag("span.who",     :content => "by: John Doe")
@@ -57,7 +55,6 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
     build
     reload
 
-    assert_have_tag("button", :content => "Rebuild")
     assert_have_tag("h1", :content => "Built #{repo.short_head} and failed")
     assert_have_tag("blockquote p", :content => "This commit will fail")
   end
@@ -83,7 +80,7 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
 
     click_link "my-test-project"
     assert_have_tag "h1", :content => "success"
-    assert_have_tag "#previous_builds li", :count => 1
+    assert_have_tag "#previous_builds li", :count => 2
   end
 
   scenario "Fixing the build command and then rebuilding HEAD" do
@@ -96,7 +93,6 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
     click_button "manual build"
 
     assert_have_tag("#build h1", :content => "hasn't been built yet")
-    assert_have_no_tag("button", :content => "Rebuild")
 
     build
     reload
@@ -124,7 +120,6 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
     click_button "manual build"
 
     assert_have_tag("#build h1", :content => "hasn't been built yet")
-    assert_have_no_tag("button", :content => "Rebuild")
 
     build
     reload
@@ -139,7 +134,6 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
     click_button "Rebuild"
 
     assert_have_tag("#build h1", :content => "hasn't been built yet")
-    assert_have_no_tag("button", :content => "Rebuild")
 
     build
     reload
@@ -148,7 +142,7 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
 
     click_link "my-test-project"
     assert_have_tag("#last_build h1", :content => "success")
-    assert_have_tag("#previous_builds li", :count => 1)
+    assert_have_tag("#previous_builds li", :count => 2)
     assert_have_tag("#previous_builds li[@class='failed']", :content => commit)
   end
 
@@ -177,7 +171,6 @@ class ManualBuildTest < Test::Unit::AcceptanceTestCase
       click_link "my-test-project"
 
       assert_have_tag("h1", :content => "Built #{repo.short_head} successfully")
-      assert_have_no_tag("#previous_builds")
     rescue LoadError
       warn "Couldn't load DJ. Skipping test"
     ensure

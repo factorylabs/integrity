@@ -26,3 +26,4 @@
 %h2 Build Output:
 %pre.output{ :id => build.pending? || build.building? ? 'output_window' : '' }
   = partial(:build_output, :build => build)
+

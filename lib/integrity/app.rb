@@ -5,7 +5,7 @@ module Integrity
     enable  :methodoverride, :static, :sessions
     disable :build_all
 
-    helpers Sinatra::UrlForHelper, Integrity::Helpers
+    helpers Integrity::Helpers
 
     not_found do
       status 404
@@ -19,7 +19,16 @@ module Integrity
       show :error, :title => "something has gone terribly wrong"
     end
 
+    use Sass::Plugin::Rack
+
+    configure do |app|
+      Sass::Plugin.options[:css_location]      = app.public
+      Sass::Plugin.options[:template_location] = app.views
+    end
+
     before do
+      halt 404 if request.path_info.include?("favico")
+
       # The browser only sends http auth data for requests that are explicitly
       # required to do so. This way we get the real values of +#logged_in?+ and
       # +#current_user+
@@ -36,12 +45,6 @@ module Integrity
       halt 400 unless payload =  endpoint_payload
 
       BuildableProject.call(payload).each { |b| b.build }.size.to_s
-    end
-
-    get "/integrity.css" do
-      response["Content-Type"] = "text/css; charset=utf-8"
-      etag stylesheet_hash
-      sass :integrity
     end
 
     get "/?" do
@@ -114,7 +117,6 @@ module Integrity
 
     get "/:project/builds/:build" do
       login_required unless current_project.public?
-
       show :build, :title => ["projects", current_project.permalink,
                               current_build.commit.identifier]
     end
@@ -149,5 +151,12 @@ module Integrity
       bash_color_codes(h(@build.output))
     end
 
+    delete "/:project/builds/:build" do
+      login_required
+
+      url = project_url(current_build.project).to_s
+      current_build.destroy!
+      redirect url
+    end
   end
 end

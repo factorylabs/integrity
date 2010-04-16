@@ -58,7 +58,7 @@ class PushTest < Test::Unit::AcceptanceTestCase
 
     assert_have_tag("h1", :content => "Built #{repo.short_head} successfully")
     assert_have_tag(".attribution", :content => "by John Doe")
-    assert_have_tag("#previous_builds li", :count => 3)
+    assert_have_tag("#previous_builds li", :count => 4)
   end
 
   scenario "Receiving a payload with build_all option *disabled*" do
@@ -75,7 +75,55 @@ class PushTest < Test::Unit::AcceptanceTestCase
     visit "/my-test-project"
 
     assert_have_tag("h1", :content => "Built #{repo.short_head} successfully")
-    assert_have_no_tag("#previous_builds li")
+    assert_have_tag("#previous_builds li", :count => 1)
+  end
+
+  scenario "Building two projects with the same URI and branch" do
+    old_builder = Integrity.builder
+
+    begin
+      Integrity.configure { |c|
+        c.builder :threaded, 1
+        c.build_all!
+      }
+
+      stub(Time).now { unique { |i| Time.mktime(2009, 12, 15, i / 60, i % 60) } }
+
+      repo = git_repo(:my_test_project)
+
+      3.times{|i| i % 2 == 1 ? repo.add_successful_commit : repo.add_failing_commit}
+
+      Project.gen(:my_test_project,
+        :name    => "Success",
+        :uri     => repo.uri,
+        :command => "exit 0"
+      )
+
+      Project.gen(:my_test_project,
+        :name    => "Failure",
+        :uri     => repo.uri,
+        :command => "exit 1"
+      )
+
+      push_post payload(repo)
+      assert_equal "8", last_response.body
+
+      Integrity.builder.wait!
+
+      visit "/success"
+
+      assert_have_tag("h1", :content => "Built #{repo.short_head} successfully")
+      assert_have_tag(".attribution", :content => "by John Doe")
+      assert_have_tag("#previous_builds li", :count => 4)
+
+      visit "/failure"
+
+      assert_have_tag("h1", :content => "Built #{repo.short_head} and failed")
+      assert_have_tag(".attribution", :content => "by John Doe")
+      assert_have_tag("#previous_builds li", :count => 4)
+    ensure
+      Integrity.builder = old_builder
+    end
   end
 
   scenario "Building two projects with the same URI and branch" do

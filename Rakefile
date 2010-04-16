@@ -28,17 +28,6 @@ namespace :test do
   end
 end
 
-namespace :db do
-  task :create_schema do
-    require "init"
-    DataMapper.auto_migrate!
-  end
-
-  task :update_schema do
-    require "init"
-    DataMapper.auto_upgrade!
-  end
-end
 
 namespace :integrity do
   desc "Check for new commits"
@@ -64,6 +53,20 @@ namespace :integrity do
   end
 end
 
+task :db do
+  require "init"
+  DataMapper.auto_upgrade!
+end
+
+desc "Clean-up build directory"
+task :cleanup do
+  require "init"
+  Integrity::Build.all(:completed_at.not => nil).each { |build|
+    dir = Integrity.directory.join(build.id.to_s)
+    dir.rmtree if dir.directory?
+  }
+end
+
 namespace :jobs do
   desc "Clear the delayed_job queue."
   task :clear do
@@ -80,7 +83,6 @@ namespace :jobs do
   end
 end
 
-
 namespace :resque do
 
   def kill_threads(threads)
@@ -89,6 +91,13 @@ namespace :resque do
 
   task :setup do
     require "init"
+  end
+
+  desc "Start a Resque worker for Integrity"
+  task :work do
+    require "init"
+    ENV["QUEUE"] = "integrity"
+    Rake::Task["resque:resque:work"].invoke
   end
 
   desc "Start a Resque worker per queue Integrity"

@@ -1,14 +1,8 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '../', "lib"))
-
-begin
-  # Require the preresolved locked set of gems.
-  require File.expand_path('../../.bundle/environment', __FILE__)
-rescue LoadError
-  # Fallback on doing the resolve at runtime.
-  require "rubygems"
-  require "bundler"
-  Bundler.setup
-end
+require "test/unit"
+require "rr"
+require "extlib"
+require "dm-sweatshop"
+require "contest"
 
 require "integrity"
 
@@ -24,30 +18,26 @@ begin
 rescue LoadError
 end
 
-class Test::Unit::TestCase
+class IntegrityTest < Test::Unit::TestCase
   include RR::Adapters::TestUnit
   include Integrity
 
-  before(:all) do
+  def setup
     Integrity.configure { |c|
       c.database  "sqlite3:test.db"
       c.directory File.expand_path(File.dirname(__FILE__) + "/../tmp")
       c.base_url "http://www.example.com"
-      c.log  "/dev/null"
+      c.log  "test.log"
       c.user "admin"
       c.pass "test"
       c.keep_build_days 1
     }
+    Thread.abort_on_exception = true
+    DataMapper.auto_migrate!
   end
 
-  before(:each) do DataMapper.auto_migrate! end
-
-  def capture_stdout
-    output = StringIO.new
-    $stdout = output
-    yield
-    $stdout = STDOUT
-    output
+  class << self
+    alias_method :it, :test
   end
 
   def assert_change(object, method, difference=1)

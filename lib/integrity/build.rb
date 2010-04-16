@@ -4,8 +4,7 @@ module Integrity
 
     property :id,           Serial
     property :project_id,   Integer   # TODO :nullable => false
-    property :output,       Text,     :default => "", :lazy => false,
-      :length => 1048576
+    property :output,       Text,     :default => "", :length => 1048576
     property :successful,   Boolean,  :default => false
     property :started_at,   DateTime
     property :completed_at, DateTime
@@ -15,29 +14,34 @@ module Integrity
     belongs_to :project
     has 1,     :commit
 
-    before :destroy do commit.destroy! end
-    before :create do cleanup_builds end
-
-    def self.pending
-      all(:started_at => nil)
+    before :destroy do
+      commit.destroy!
     end
 
-    def pending?
-      started_at.nil?
+    def successful?
+      successful == true
+    end
+
+    def failed?
+      ! successful?
     end
 
     def building?
       ! started_at.nil? && completed_at.nil?
     end
 
-    def failed?
-      !successful?
+    def pending?
+      started_at.nil?
+    end
+
+    def completed?
+      !pending? && !building?
     end
 
     def status
       case
-      when pending?    then :pending
       when building?   then :building
+      when pending?    then :pending
       when successful? then :success
       when failed?     then :failed
       end
@@ -52,12 +56,6 @@ module Integrity
       end
     end
 
-    def cleanup_builds
-      `find #{Integrity.directory} -maxdepth 1 -type d -mtime +#{Integrity.keep_build_days} | xargs rm -rf`
-      project.builds.all(:created_at.lte => (Time.now - 60 * 60 * 24 * Integrity.keep_build_days)).each do |build|
-        build.destroy
-      end
-    end
 
     def repository_path
      "#{project.uri}-#{project.branch}".

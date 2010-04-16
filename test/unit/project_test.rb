@@ -1,22 +1,12 @@
 require "helper"
 
-class ProjectTest < Test::Unit::TestCase
-  test "fixture is valid and can be saved" do
-    assert_change(Project, :count) {
-      project = Project.gen
-      assert project.valid? && project.save
-    }
-  end
+class ProjectTest < IntegrityTest
+  test "all" do
+    rails   = Project.gen(:name => "rails")
+    camping = Project.gen(:name => "camping")
+    sinatra = Project.gen(:name => "sinatra")
 
-  describe "Properties" do
-    before(:each) do
-      @project = Project.gen(:integrity)
-    end
-
-    it "has a name" do
-      assert_equal "Integrity", @project.name
-    end
-
+<<<<<<< HEAD
     it "has a permalink" do
       assert_equal "integrity", @project.permalink
 
@@ -69,35 +59,33 @@ class ProjectTest < Test::Unit::TestCase
       assert_equal :blank,    Project.gen(:blank).status
       assert_equal :building, Project.gen(:building).status
     end
+=======
+    assert_equal [camping, rails, sinatra], Project.all
+>>>>>>> upstream/master
   end
 
-  describe "Validation" do
-    it "requires a name" do
-      assert_no_change(Project, :count) {
-        assert ! Project.gen(:name => nil).valid?
-      }
-    end
+  test "destroy" do
+    project = Project.gen(:builds => 2.of{Build.gen})
+    assert_change(Build, :count, -2) { project.destroy }
+  end
 
-    it "ensures its name is unique" do
-      Project.gen(:name => "Integrity")
+  test "sorted_builds" do
+    project = Project.gen(:builds => 5.of{Build.gen})
+    first   = project.sorted_builds.first
+    last    = project.sorted_builds.last
 
-      assert_no_change(Project, :count) {
-        assert ! Project.gen(:name => "Integrity").valid?
-      }
-    end
+    assert first.created_at > last.created_at
+  end
 
-    it "requires an URI" do
-      assert_no_change(Project, :count) {
-        assert ! Project.gen(:uri => nil).valid?
-      }
-    end
+  test "status" do
+    assert_equal :blank,    Project.gen(:blank).status
+    assert_equal :success,  Project.gen(:successful).status
+    assert_equal :failed,   Project.gen(:failed).status
+    assert_equal :pending,  Project.gen(:pending).status
+    assert_equal :building, Project.gen(:building).status
+  end
 
-    it "requires an SCM" do
-      assert_no_change(Project, :count) {
-        ! Project.gen(:scm => nil).valid?
-      }
-    end
-
+<<<<<<< HEAD
     it "requires a branch" do
       assert_no_change(Project, :count) {
         ! Project.gen(:branch => nil).valid?
@@ -109,39 +97,54 @@ class ProjectTest < Test::Unit::TestCase
         assert ! Project.gen(:command => nil).valid?
       }
     end
+=======
+  test "permalink" do
+    assert_equal "integrity", Project.gen(:integrity).permalink
+    assert_equal "foos-bar-baz-and-bacon",
+      Project.gen(:name => "foo's bar/baz and BACON?!").permalink
+>>>>>>> upstream/master
   end
 
-  it "orders projects by name" do
-    rails   = Project.gen(:name => "rails",   :public => true)
-    merb    = Project.gen(:name => "merb",    :public => true)
-    sinatra = Project.gen(:name => "sinatra", :public => true)
-    camping = Project.gen(:name => "camping", :public => false)
-
-    assert_equal [camping, merb, rails, sinatra], Project.all
-    assert_equal [merb, rails, sinatra], Project.all(:public => true)
+  it "public" do
+    assert Project.gen(:public => "1").public?
+    assert ! Project.gen(:public => "0").public?
+    assert Project.gen(:public => "false").public?
+    assert Project.gen(:public => "true").public?
+    assert ! Project.gen(:public => false).public?
+    assert ! Project.gen(:public => nil).public?
   end
 
-  test "destroying itself" do
-    project = Project.gen(:builds => 7.of{Build.gen})
-
-    assert_change(Build, :count, -7) { project.destroy }
-    assert ! Project.get(project.id)
+  test "defaults" do
+    assert_equal "master", Project.new.branch
+    assert_equal "rake", Project.new.command
+    assert Project.new.public?
   end
 
-  test "finding its previous builds" do
-    project = Project.gen(:builds => 5.of{Build.gen})
+  test "validations" do
+    assert_no_change(Project, :count) {
+      assert ! Project.gen(:name => nil).valid?
+    }
 
-    assert_equal 4,  project.previous_builds.count
-    assert_equal [], Project.gen(:builds => 1.of{Build.gen}).previous_builds
-    assert_equal [], Project.gen(:blank).previous_builds
+    assert_no_change(Project, :count) {
+      assert ! Project.gen(:uri => nil).valid?
+    }
 
-    assert project.previous_builds.first.created_at >
-      project.previous_builds.last.created_at
+    assert_no_change(Project, :count) {
+      assert ! Project.gen(:branch => nil).valid?
+    }
 
-    assert ! Project.gen(:blank).last_build
-    assert ! project.previous_builds.include?(project.last_build)
+    assert_no_change(Project, :count) {
+      assert ! Project.gen(:command => nil).valid?
+    }
+
+    Project.gen(:name => "Integrity")
+
+    assert_no_change(Project, :count) {
+      assert ! Project.gen(:name => "Integrity").valid?
+    }
   end
 
+  # XXX
   describe "When updating its notifiers" do
     setup do
       twitter = Notifier.gen(:twitter, :enabled => true)
@@ -221,7 +224,7 @@ class ProjectTest < Test::Unit::TestCase
   end
 
   describe "When retrieving state about its notifier" do
-    before(:each) do
+    setup do
       @project = Project.gen
       @irc     = Notifier.gen(:irc)
     end

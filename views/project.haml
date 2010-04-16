@@ -8,7 +8,7 @@
       You can request a
       %button{ :type => :submit } manual build
 - else
-  #last_build{ :class => @project.last_build.status }
+  #last_build{ :class => @project.status }
     = partial(:build_info, :build => @project.last_build)
 
   %form{ :action => project_path(@project, :builds), :method => :post }
@@ -16,10 +16,10 @@
       %button{ :type => :submit, :title => "Fetch the last commit from the remote repository and build it" }<
         Fetch and build
 
-  - unless @project.previous_builds.empty?
-    %h2 Previous builds
+  - unless @project.blank?
+    %h2 Builds
     %ul#previous_builds
-      - @project.previous_builds.each do |build|
+      - @project.sorted_builds.each do |build|
         %li{ :class => build.status }
           %a{ :href => build_path(build) }
             %strong.build<

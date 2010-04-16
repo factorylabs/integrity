@@ -7,9 +7,8 @@ class BrowseBuildsTest < Test::Unit::AcceptanceTestCase
     So I can see the history of a project
   EOS
 
-  scenario "Browsing to a project with not builds" do
+  scenario "Browsing to a project with no builds" do
     Project.gen(:blank, :name => "Integrity")
-
 
     visit "/integrity"
 
@@ -31,7 +30,7 @@ class BrowseBuildsTest < Test::Unit::AcceptanceTestCase
     within("ul#previous_builds") do
       assert_have_tag("li.pending", :count => 2)
       assert_have_tag("li.failed",  :count => 2)
-      assert_have_tag("li.success", :count => 2)
+      assert_have_tag("li.success", :count => 3)
     end
   end
 
@@ -43,7 +42,7 @@ class BrowseBuildsTest < Test::Unit::AcceptanceTestCase
       :message => "No more pending tests :)",
       :committed_at => Time.mktime(2008, 12, 15, 18)
     )
-    Project.gen(:integrity, :builds => [build])
+    p = Project.gen(:integrity, :builds => [build])
 
     visit "/integrity"
 
@@ -54,15 +53,25 @@ class BrowseBuildsTest < Test::Unit::AcceptanceTestCase
     assert_have_tag("pre.output",   :content => "This is the build output")
   end
 
-  scenario "Browsing to an individual build pages" do
+  scenario "Browsing to an individual build page" do
     Project.gen(:integrity, :builds => [
       Build.gen(:successful, :commit => Commit.gen(:identifier => "87e673a")),
-      Build.gen(:successful, :commit => Commit.gen(:identifier => "7fee3f0"))
+      Build.gen(:pending, :commit => Commit.gen(:identifier => "7fee3f0")),
+      Build.gen(:pending)
     ])
 
     visit "/integrity"
     click_link(/Build 87e673a/)
 
     assert_have_tag("h1", :content => "Built 87e673a successfully")
+    assert_have_tag("h2", :content => "Build Output:")
+    assert_have_tag("button", :content => "Rebuild")
+
+    visit "/integrity"
+    click_link(/Build 7fee3f0/)
+
+    assert_have_tag("h1", :content => "This commit hasn't been built yet")
+    assert_have_no_tag("h2", :content => "Build Output:")
+    assert_have_tag("button", :content => "Rebuild")
   end
 end

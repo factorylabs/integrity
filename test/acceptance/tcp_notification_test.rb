@@ -1,14 +1,15 @@
 require "helper/acceptance"
 
-class IRCNotificationTest < Test::Unit::AcceptanceTestCase
+class TCPNotificationTest < Test::Unit::AcceptanceTestCase
   story <<-EOS
     As an administrator,
-    I want to setup the IRC notifiers on my projects
+    I want to setup the TCP notifiers on my projects
     So that I get alerts with every build
+    Using Corey's awesome  http://github.com/atmos/irccat-nodejs
   EOS
 
   setup do
-    load "integrity/notifier/irc.rb"
+    load "integrity/notifier/tcp.rb"
     @server = mock_socket
   end
 
@@ -21,8 +22,8 @@ class IRCNotificationTest < Test::Unit::AcceptanceTestCase
     visit "/my-test-project"
     click_link "Edit Project"
 
-    check "enabled_notifiers_irc"
-    fill_in "Send to", :with => "irc://irc.example.org/foo"
+    check "enabled_notifiers_tcp"
+    fill_in "Send to", :with => "tcp://0.0.0.0:1234"
     click_button "Update"
     click_button "Manual Build"
 
@@ -31,7 +32,6 @@ class IRCNotificationTest < Test::Unit::AcceptanceTestCase
 
   scenario "Notifying a successful build" do
     head = build(0)
-    2.times{ @server.gets }
 
     msg = @server.gets
     assert msg.include?("#{head} successfully")
@@ -40,7 +40,6 @@ class IRCNotificationTest < Test::Unit::AcceptanceTestCase
 
   scenario "Notifying a failed build" do
     head = build(1)
-    2.times{ @server.gets }
 
     msg = @server.gets
     assert msg.include?("#{head} and failed")

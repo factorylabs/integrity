@@ -65,7 +65,7 @@ module Integrity
 
     def repo
       @repo ||= Repository.new(
-          @build.id, @build.project.uri, @build.project.branch, commit
+        @build.id, @build.project.uri, @build.project.branch, commit
       )
     end
 
