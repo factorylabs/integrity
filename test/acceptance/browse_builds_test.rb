@@ -65,13 +65,13 @@ class BrowseBuildsTest < Test::Unit::AcceptanceTestCase
 
     assert_have_tag("h1", :content => "Built 87e673a successfully")
     assert_have_tag("h2", :content => "Build Output:")
-    assert_have_tag("button", :content => "Rebuild")
+    assert_have_no_tag("button", :content => "Rebuild")
 
     visit "/integrity"
     click_link(/Build 7fee3f0/)
 
     assert_have_tag("h1", :content => "This commit hasn't been built yet")
     assert_have_no_tag("h2", :content => "Build Output:")
-    assert_have_tag("button", :content => "Rebuild")
+    assert_have_no_tag("button", :content => "Rebuild")
   end
 end

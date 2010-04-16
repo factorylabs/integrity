@@ -55,13 +55,5 @@ module Integrity
       when :building then "#{commit.short_identifier} is building"
       end
     end
-
-
-    def repository_path
-     "#{project.uri}-#{project.branch}".
-      gsub(/[^\w_ \-]+/i, "-").
-      gsub(/[ \-]+/i, "-").
-      gsub(/^\-|\-$/i, "")
-    end
   end
 end

@@ -49,7 +49,6 @@ gem "resque"
 group :test do
   gem "ruby-debug" if RUBY_VERSION < '1.9'
   gem "sqlite3-ruby"
-  gem "do_sqlite3"
   gem "activerecord"
   gem "delayed_job", :git => "git://github.com/tobi/delayed_job.git"
   gem "rr"

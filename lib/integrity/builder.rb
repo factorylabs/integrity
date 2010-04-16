@@ -5,7 +5,7 @@ module Integrity
     end
 
     def initialize(build)
-      @build = build
+      @build  = build
       @status = false
       @output = ""
     end
@@ -24,13 +24,13 @@ module Integrity
       metadata = repo.metadata
 
       @build.update(
-          :started_at => Time.now,
-          :commit => {
-              :identifier => metadata["id"],
-              :message => metadata["message"],
-              :author => metadata["author"],
-              :committed_at => metadata["timestamp"]
-          }
+        :started_at => Time.now,
+        :commit     => {
+          :identifier   => metadata["id"],
+          :message      => metadata["message"],
+          :author       => metadata["author"],
+          :committed_at => metadata["timestamp"]
+        }
       )
     end
 
@@ -38,9 +38,9 @@ module Integrity
       Integrity.log "Build #{commit} exited with #{@status} got:\n #{@output}"
 
       @build.update!(
-          :completed_at => Time.now,
-          :successful => @status,
-          :output => @output
+        :completed_at => Time.now,
+        :successful   => @status,
+        :output       => @output
       )
 
       @build.project.enabled_notifiers.each { |n| n.notify_of_build(@build) }

@@ -2,13 +2,7 @@ Integrity — Continuous Integration server
 
 Code  http://github.com/integrity/integrity
 Docs  http://integrityapp.com
-<<<<<<< HEAD
-Bugs  http://github.com/integrity/integrity/issues
-IRC   irc://irc.freenode.net/integrity
-List  http://groups.google.com/group/integrityapp
-=======
 CI    http://builder.integrityapp.com/integrity
 Bugs  http://github.com/integrity/integrity/issues
 IRC   irc://irc.freenode.net/integrity
 List  integrity@librelist.com
->>>>>>> upstream/master

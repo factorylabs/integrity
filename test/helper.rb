@@ -5,11 +5,6 @@ require "dm-sweatshop"
 require "contest"
 
 require "integrity"
-
-Bundler.require(:test)
-
-require "test/unit"
-
 require "fixtures"
 
 begin
