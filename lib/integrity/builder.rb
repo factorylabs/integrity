@@ -84,7 +84,8 @@ module Integrity
     end
 
     def pre_bundler_rubyopt
-      ENV['RUBYOPT'] && ENV["RUBYOPT"].split.reject { |opt| opt.include?(".bundle") }.join(" ")
+      Integrity.logger.debug("ENV['RUBYOPT'] = #{ENV['RUBYOPT']}" )
+      ENV['RUBYOPT'] && ENV["RUBYOPT"].split.reject { |opt| opt.include?("bundler") }.join(" ")
     end
 
   end
