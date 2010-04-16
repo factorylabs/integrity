@@ -21,7 +21,7 @@ module Integrity
     { :name    => "Integrity",
       :uri     => "git://github.com/foca/integrity.git",
       :branch  => "master",
-      :command => "rake",
+      :command => "bundle exec rake",
       :public  => true }
   end
 
