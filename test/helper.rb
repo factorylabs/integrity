@@ -1,3 +1,5 @@
+ORIGINAL_ENV = ENV.to_hash
+
 require "test/unit"
 require "rr"
 require "extlib"

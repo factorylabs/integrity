@@ -48,16 +48,18 @@ module Integrity
 
     def run
       # HACK: gem bundler sets the RUBYOPT env variable which jacks with projects own gem management so unset in command
-      cmd = "(cd #{repo.directory} && env - bash --login -c '#{@build.project.command}' 2>&1)"
+      cmd = "(#{@build.project.command} 2>&1)"
       Integrity.logger.debug(cmd)
       @output = ''
-      IO.popen(cmd, "r") do |io|
-        # incremental update of status
-        io.each do |line|
-          @output += line
-          @build.update!(
-              :output => @output
-          )
+      with_clean_env do
+        IO.popen(cmd, "r") do |io|
+          # incremental update of status
+          io.each do |line|
+            @output += line
+            @build.update!(
+                :output => @output
+            )
+          end
         end
       end
       @status = $?.success?
@@ -73,6 +75,15 @@ module Integrity
       @build.commit.identifier
     end
 
+    private
+
+    def with_clean_env
+      bundled_env = ENV.to_hash
+      ENV.replace(ORIGINAL_ENV)
+      yield
+    ensure
+      ENV.replace(bundled_env.to_hash)
+    end
 
   end
 end

@@ -1,5 +1,6 @@
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "lib"))
+ORIGINAL_ENV = ENV.to_hash
 
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "lib"))
 
 require ".bundle/environment"
 require "integrity"
