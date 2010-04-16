@@ -105,7 +105,7 @@ namespace :resque do
     threads = []
 
     Integrity.build_queues.each do |queue|
-      ENV["QUEUE"] = "'#{queue}'"
+      ENV["QUEUE"] = "#{queue}"
       threads << Thread.new do
         system "rake resque:work"
       end

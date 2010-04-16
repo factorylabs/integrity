@@ -13,7 +13,7 @@ module Integrity
     property :branch,     String,   :required => true, :default => "master"
     property :command,    String,   :required => true, :length => 255, :default => "rake"
     property :public,     Boolean,  :default  => true
-
+    property :queue,      String,   :default  => 'integrity'
 
     timestamps :at
 
