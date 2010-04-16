@@ -6,62 +6,7 @@ class ProjectTest < IntegrityTest
     camping = Project.gen(:name => "camping")
     sinatra = Project.gen(:name => "sinatra")
 
-<<<<<<< HEAD
-    it "has a permalink" do
-      assert_equal "integrity", @project.permalink
-
-      assert_equal "foos-bar-baz-and-bacon",
-        Project.gen(:name => "foo's bar/baz and BACON?!").permalink
-    end
-
-    it "has an URI" do
-      assert_equal "git://github.com/foca/integrity.git",
-        @project.uri.to_s
-    end
-
-    it "has an SCM" do
-      assert_equal "git", @project.scm
-      assert_equal "git", Project.new.scm
-    end
-
-    it "has a branch" do
-      assert_equal "master", @project.branch
-      assert_equal "master", Project.new.branch
-    end
-
-    it "has a command" do
-      assert_equal "rake", @project.command
-      assert_equal "rake", Project.new.command
-    end
-
-    it "knows it's visibility" do
-      assert Project.new.public?
-
-      assert @project.public?
-      assert Project.gen(:public => "1").public?
-      assert ! Project.gen(:public => "0").public?
-
-      assert Project.gen(:public => "false").public?
-      assert Project.gen(:public => "true").public?
-      assert ! Project.gen(:public => false).public?
-      assert ! Project.gen(:public => nil).public?
-    end
-
-    it "has created_at and updated_at datetimes" do
-      assert_kind_of DateTime, @project.created_at
-      assert_kind_of DateTime, @project.updated_at
-    end
-
-    it "knows it's status" do
-      assert_equal :success,  Project.gen(:successful).status
-      assert_equal :failed,   Project.gen(:failed).status
-      assert_equal :pending,  Project.gen(:pending).status
-      assert_equal :blank,    Project.gen(:blank).status
-      assert_equal :building, Project.gen(:building).status
-    end
-=======
     assert_equal [camping, rails, sinatra], Project.all
->>>>>>> upstream/master
   end
 
   test "destroy" do
@@ -85,24 +30,10 @@ class ProjectTest < IntegrityTest
     assert_equal :building, Project.gen(:building).status
   end
 
-<<<<<<< HEAD
-    it "requires a branch" do
-      assert_no_change(Project, :count) {
-        ! Project.gen(:branch => nil).valid?
-      }
-    end
-
-    it "requires a command" do
-      assert_no_change(Project, :count) {
-        assert ! Project.gen(:command => nil).valid?
-      }
-    end
-=======
   test "permalink" do
     assert_equal "integrity", Project.gen(:integrity).permalink
     assert_equal "foos-bar-baz-and-bacon",
       Project.gen(:name => "foo's bar/baz and BACON?!").permalink
->>>>>>> upstream/master
   end
 
   it "public" do

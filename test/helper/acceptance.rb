@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 require "helper"
 
-require "storyteller"
-=======
->>>>>>> upstream/master
 require "webrat"
 require "rack/test"
 require "webmock/test_unit"
