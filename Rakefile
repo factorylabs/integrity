@@ -117,10 +117,10 @@ namespace :resque do
 
   desc "Kill all the workers"
   task  :kill_all_workers => :setup do
-    rake_info = `ps e | grep [r]esque:worker_per_queue`.split()
+    rake_info = `ps eopid,ppid,command | grep [r]esque:worker_per_queue`.split()
     unless rake_info.empty?
       parent_pid = rake_info[0]
-      children = `ps ef | awk '$3 == '#{parent_pid}' { print $2 }'`.split
+      children = `ps eopid,ppid,command | awk '$2 == '#{parent_pid}' { print $1 }'`.split
       children.each do |pid|
         `kill #{pid}`
       end
