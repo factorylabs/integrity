@@ -24,7 +24,7 @@ gem "mysql"
 # These are dependencies for the various notifiers. Uncomment as appropriate.
 # = Email
  gem "sinatra-ditties"
- gem "integritray", '0.4.0'
+ gem "integritray", '0.4.1'
  gem "builder"
 # = IRC
 # gem "shout-bot"
