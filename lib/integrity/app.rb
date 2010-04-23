@@ -140,7 +140,8 @@ module Integrity
       login_required
 
       @build = current_project.builds.first(:id => params[:build])
-      bash_color_codes(h(@build.output))
+      content_type :json
+      build_poll_json(@build)
     end
 
     #
@@ -148,7 +149,8 @@ module Integrity
       login_required
 
       @build = current_project.builds.last
-      bash_color_codes(h(@build.output))
+      content_type :json
+      build_poll_json(@build)
     end
 
     delete "/:project/builds/:build" do
